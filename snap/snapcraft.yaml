@@ -31,5 +31,6 @@ parts:
       - doxygen
       - make
       - erlang
+      - cargo
 
     plugin: make
