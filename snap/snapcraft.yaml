@@ -3,7 +3,7 @@ base: core20
 adopt-info: miner
 summary: Miner for helium blockchain
 description: |
-  Miner for the helium blockchain. Thsi snap requires multiple interfaces to
+  Miner for the helium blockchain. This snap requires multiple interfaces to
   be connected before the miner daemon can start.
 
       snap connect helium-miner:i2c pi:i2c-1
