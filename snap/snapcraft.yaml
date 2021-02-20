@@ -3,14 +3,28 @@ base: core20
 adopt-info: miner
 summary: Miner for helium blockchain
 description: |
-  Miner for the helium blockchain. Thsi snap requires the i2c and log-observe interfaces
-  to be connected to work properly, run:
+  Miner for the helium blockchain. This snap requires multiple interfaces to
+  be connected before the miner daemon can start.
 
       snap connect helium-miner:i2c pi:i2c-1
       snap connect helium-miner:log-observe
+      snap connect helium-miner:hardware-observe
+      snap connect helium-miner:network-control
 
-  after installing the snap.
-  All data, log files etc are stored under /var/snap/helium-miner/common
+  After connecting these interfaces the miner daemon will automatically start.
+  All variable data and log files are stored under /var/snap/helium-miner/common
+
+  To talk directly to the miner daemon you can use the shipped
+  nebra-helium-miner command like below.
+
+      sudo nebra-helium-miner info summary
+
+  The genesis blockchain api can be found in
+  /var/snap/helium-miner/common/miner/update/genesis
+  You can use the "sudo nebra-helium-miner load genesis ..." command
+  pointing to that directory to load and update the blockchain api.
+
+  The miner daemon registers as com.helium.Miner to the system dbus of the host
 
 grade: stable
 confinement: strict
@@ -20,25 +34,59 @@ architectures:
     run-on: arm64
 
 apps:
-  miner:
-    command: miner/bin/miner foreground
-    daemon: simple
+  daemon:
+    command: miner/bin/miner start
+    daemon: forking
     environment:
       COOKIE: "miner"
       HOME: "$SNAP_COMMON"
       PATH: "/usr/lib/erlang/bin:$SNAP/miner/bin:$PATH"
       RELX_OUT_FILE_PATH: "/tmp"
+      RELX_CONFIG_PATH: "$SNAP_COMMON/config/sys"
+      RUNNER_LOG_DIR: "$SNAP_COMMON/log"
     plugs:
       - i2c
       - log-observe
       - network
       - network-bind
+      - network-control
+      - hardware-observe
+    slots:
+      - dbus-svc
+  nebra-helium-miner:
+    command: miner/bin/miner
+    environment:
+      COOKIE: "miner"
+      HOME: "$SNAP_COMMON"
+      PATH: "/usr/lib/erlang/bin:$SNAP/miner/bin:$PATH"
+      RELX_OUT_FILE_PATH: "/tmp"
+      RELX_CONFIG_PATH: "$SNAP_COMMON/config/sys"
+      RUNNER_LOG_DIR: "$SNAP_COMMON/log"
+    plugs:
+      - i2c
+      - log-observe
+      - network
+      - network-bind
+      - network-control
+      - hardware-observe
+
+slots:
+  dbus-svc:
+    interface: dbus
+    bus: system
+    name: com.helium.Miner
 
 layout:
   /usr/lib/erlang:
     bind: $SNAP/usr/lib/erlang
   /var/log/miner:
     bind: $SNAP_COMMON/log
+  /var/data:
+    bind: $SNAP_COMMON/data
+  /opt/miner/update:
+    bind: $SNAP_COMMON/update
+  /etc/lsb_release:
+    bind-file: $SNAP_COMMON/.lsb_release
 
 parts:
   erlang:
@@ -87,8 +135,8 @@ parts:
     after: [ miner ]
     plugin: nil
     override-build: |
-      mkdir -p $SNAPCRAFT_PART_INSTALL/miner/updates
+      mkdir -p $SNAPCRAFT_PART_INSTALL/miner/update
       wget https://github.com/helium/blockchain-api/raw/master/priv/prod/genesis \
-        --output-document=$SNAPCRAFT_PART_INSTALL/miner/updates/genesis
+        --output-document=$SNAPCRAFT_PART_INSTALL/miner/update/genesis
     build-packages:
       - wget
