@@ -3,13 +3,13 @@
 Miner for the helium blockchain. This snap requires multiple interfaces to
 be connected before the miner daemon can start.
 
-    snap connect helium-miner:i2c pi:i2c-1
-    snap connect helium-miner:log-observe
-    snap connect helium-miner:hardware-observe
-    snap connect helium-miner:network-control
+    snap connect nebra-helium-miner:i2c pi:i2c-1
+    snap connect nebra-helium-miner:log-observe
+    snap connect nebra-helium-miner:hardware-observe
+    snap connect nebra-helium-miner:network-control
 
 After connecting these interfaces the miner daemon will automatically start.
-All variable data and log files are stored under /var/snap/helium-miner/common
+All variable data and log files are stored under /var/snap/nebra-helium-miner/common
 
 To talk directly to the miner daemon you can use the shipped
 nebra-helium-miner command like below.
@@ -17,7 +17,7 @@ nebra-helium-miner command like below.
     sudo nebra-helium-miner info summary
 
 The genesis blockchain api can be found in
-/var/snap/helium-miner/common/miner/update/genesis
+/var/snap/nebra-helium-miner/common/miner/update/genesis
 You can use the "sudo nebra-helium-miner load genesis ..." command
 pointing to that directory to load and update the blockchain api.
 
