@@ -5,8 +5,8 @@ if [ ! -e $SNAP_COMMON/config/sys.config ]; then
   mkdir -p $SNAP_COMMON/config
   cp $SNAP/miner/releases/0.1.0/sys.config $SNAP_COMMON/config/
   # set key to undefined to be able to run without i2c attached key
-  #sed -i 's/{key, .*$/{key, undefined},/' \
-  #  $SNAP_COMMON/config/sys.config
+  sed -i 's/{key, .*$/{key, undefined},/' \
+    $SNAP_COMMON/config/sys.config
 fi
 
 # copy blockchain-api to writable place if it does not exist yet
