@@ -10,6 +10,8 @@ If you are running on an actual HNT Gateway, please edit the {key, ...} entry
 in /var/snap/helium-miner/common/config/sys.config to make it talk to the i2c
 slot holding the key.
 
+https://docs.helium.com/mine-hnt/
+
 **++++ NOTE !!! ++++**
 
 Miner for the helium blockchain. This snap requires multiple interfaces to
