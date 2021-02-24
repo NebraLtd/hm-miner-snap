@@ -1,6 +1,7 @@
 # helium-miner-snap
 
-+++++ NOTE !!! +++++
+**++++ NOTE !!! ++++**
+
 This miner *will not mine HNT* for you. Actual mining requires hardware keys
 to be available on your gateway that are only available on actual helium miner
 gateway hardware ! Without such hardware it will run, but not generate HNT.
@@ -8,7 +9,8 @@ gateway hardware ! Without such hardware it will run, but not generate HNT.
 If you are running on an actual HNT Gateway, please edit the {key, ...} entry
 in /var/snap/helium-miner/common/config/sys.config to make it talk to the i2c
 slot holding the key.
-+++++ NOTE !!! +++++
+
+**++++ NOTE !!! ++++**
 
 Miner for the helium blockchain. This snap requires multiple interfaces to
 be connected before the miner daemon can start.
@@ -28,7 +30,7 @@ helium-miner command like below.
 
 The genesis blockchain api can be found in
 /var/snap/helium-miner/common/miner/update/genesis
-You can use the "sudo helium-miner genesis load ..." command
+You can use the ```helium-miner genesis load ...``` command
 pointing to that directory to load and update the blockchain api.
 
 The miner daemon registers as com.helium.Miner to the system dbus of the host
