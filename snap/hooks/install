@@ -17,7 +17,8 @@ fi
 
 # put fake lsb_release in place if it is size zero
 if [ "$(stat -c %s $SNAP_COMMON/.lsb_release)" = "0" ]; then
-  cat /etc/os-release >$SNAP_COMMON/.lsb_release
+  grep PRETTY_NAME /etc/os-release | sed 's/^.*=//' | \
+	  tr -d '"' >$SNAP_COMMON/.lsb_release
 fi
 
 # only start if all interfaces are connected
